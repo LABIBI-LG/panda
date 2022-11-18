@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/x-icon" href="images/002.png">
+	<title>胖達操行成績</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+</head>
+
+<body class="bg-dark">
+	<div class="container vh-100">
+		<div class="row pt-5">
+			<div class="col-11 col-md-10 col-xl-9 mx-auto">
+				<div class="card w-100 py-4">
+					<div class="card-body">
+						<h5 class="card-title text-center">胖達不是胖胖達</h5>
+						<div class="alert alert-info" role="alert">
+							<p>good</p>
+							<ul class="list-group" id="good-list">
+								<!-- js -->
+							</ul>
+						</div>
+						<div class="alert alert-danger" role="alert">
+							<p>bad</p>
+							<ul class="list-group" id="bad-list">
+								<!-- js -->
+							</ul>
+						</div>
+						<hr>
+						<div>
+							<p>結語:</p>
+							<div class="d-flex justify-content-center align-items-center">
+								<p id="message-text" class="fs-4 mb-0"></p>
+								<img style="max-width: 60px;" id="message-img" src="" alt="">
+							</div>
+						</div>
+						
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.1/dist/umd/popper.min.js"
+		integrity="sha384-W8fXfP3gkOKtndU4JGtKDvXbO53Wy8SZCQHczT5FMiiqmQfUpWbYdTil/SxwZgAN"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js"
+		integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/"
+		crossorigin="anonymous"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-analytics.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-database.js"></script>
+	<script type="module">
+		const config = {
+			apiKey: "AIzaSyDr6MvFyT5CRQafnN-k_P0ZlzkiiBE4j80",
+			authDomain: "panda-310a8.firebaseapp.com",
+			databaseURL: "https://panda-310a8-default-rtdb.firebaseio.com",
+			projectId: "panda-310a8",
+			storageBucket: "panda-310a8.appspot.com",
+			messagingSenderId: "664701575075",
+			appId: "1:664701575075:web:b618694fa336beaffd0416",
+			measurementId: "G-61K4ZPQR60"
+		};
+
+		// Initialize Firebase
+		firebase.initializeApp(config);
+		// var achievement = {
+		// 	"bad":{
+		// 		"警告": 1,
+		// 		"小過": 0,
+		// 		"大過": 0
+		// 	},
+		// 	"good":{
+		// 		"嘉獎": 0,
+		// 		"小功": 0,
+		// 		"大功": 0
+		// 	}
+		// };
+		// var message = {
+		// 	"text": '請好好表現',
+		// 	"img" : '001'
+		// } 
+
+		// firebase.database().ref('achievement').set(achievement);
+		// firebase.database().ref('message').set(message);
+		// 多少以上 startAt()
+		//多少以下 endAt()
+		//剛好等於多少 equalTo()
+		var achievementRef = firebase.database().ref('achievement');
+		var messageRef = firebase.database().ref('message');
+
+		achievementRef.on('value', function (snapshot) {
+			var snapshot = snapshot.val();
+			document.getElementById('bad-list').innerHTML = bind(snapshot.bad);
+			document.getElementById('good-list').innerHTML = bind(snapshot.good);
+		});
+
+
+		messageRef.on('value', function (snapshot) {
+			var snapshot = snapshot.val();
+			document.getElementById('message-text').textContent = snapshot['text'];
+			document.getElementById('message-img').setAttribute('src',`images/${snapshot['img']}.png`);
+		});
+
+		function bind(object){
+			let str = '';
+			for(let i in object){
+				if(object[i]>0){
+					str +=`
+						<li class="list-group-item">${i}: <span class="text-warning">${object[i]}</span></li>
+					`;
+				}else{
+					str +=`
+						<li class="list-group-item">${i}: ${object[i]}</li>
+					`;
+				}
+			}
+			return str;
+		}
+
+
+	</script>
+</body>
+
+</html>
